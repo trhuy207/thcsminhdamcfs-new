@@ -1,12 +1,30 @@
-import React, { Component, useState, useEffect } from 'react';
-import Axios from 'axios';
-
+import React, { useEffect, useState } from 'react';
+import { db } from '../../firebase-config';
+import { addDoc, collection, getDocs } from 'firebase/firestore';
+import { async } from '@firebase/util';
+import { useNavigate } from 'react-router-dom';
+// Phần này bị lỗi không post lên db được
 const Home = () => {
-    const [content, setContent] = useState("");
+    const [message, setMessage] = useState('');
+    
+    const [cfs, setCfs] = useState([]);
+    
+    const cfsCollectionRef = collection(db, "dataConfession");
+    let navigate = useNavigate();
 
-    const submitCfs = () => {
-        Axios.post("http://localhost:3001/api/insert/cfs", {content: content})
-    }
+    const createCfs = async () => {
+        await addDoc(cfsCollectionRef, {message});
+        navigate('/');
+    };
+
+    useEffect(() => {
+        const getCfs = async () => {
+            const data = await getDocs(cfsCollectionRef);
+            setCfs(data.docs.map((doc) => ({...doc.data(), id: doc.id})))
+        };
+
+        getCfs();
+    }, []);
 
     return (
         <>
@@ -38,10 +56,10 @@ const Home = () => {
                         <h5 className="card-title">Mọi người có tâm sự gì nè</h5>
                         <form action="" method="POST">  
                             <div className="form-group">
-                                <textarea id="message" name="message" className="form-control" placeholder="Xin mời để lại tâm sự" rows="2" onChange={(e) => {setContent(e.target.value)}} required></textarea>
+                                <textarea id="message" name="message" className="form-control" placeholder="Xin mời để lại tâm sự" rows="2"  onChange={(e) => {setMessage(e.target.value)}} required></textarea>
                             </div>   
                             <br/>
-                            <button className="btn btn-primary me-2" type="submit" name="submit" onClick={submitCfs}>Gửi nè! </button>
+                            <button className="btn btn-primary me-2" type="submit" name="submit" onClick={createCfs}>Gửi nè! </button>
                             <button className="btn btn-danger" type="reset">Xóa Thông Tin Nhập!</button>
                         </form>
                     </div>

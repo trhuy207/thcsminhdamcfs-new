@@ -6,6 +6,7 @@ import Footer from '../../components/Footer/Footer';
 
 import Home from '../Home/Home';
 import Contact from '../Contact/Contact';
+import Admin from '../Admin/Admin';
 
 class Page extends Component {
     render() {
@@ -16,6 +17,7 @@ class Page extends Component {
                         <Routes>
                             <Route path='/' exact element={<Home />}></Route>
                             <Route path='/contact' exact element={<Contact />}></Route>
+                            <Route path='/admin' exact element={<Admin />}></Route>
                         </Routes>
                     <Footer />
                 </Router>
