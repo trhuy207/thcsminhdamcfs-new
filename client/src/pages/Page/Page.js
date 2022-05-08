@@ -17,7 +17,6 @@ class Page extends Component {
                             <Route path='/' exact element={<Home />}></Route>
                             <Route path='/contact' exact element={<Contact />}></Route>
                         </Routes>
-
                     <Footer />
                 </Router>
             </>
